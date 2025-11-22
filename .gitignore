@@ -1,0 +1,98 @@
+# -----------------------------------------
+# PYTHON
+# -----------------------------------------
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.pdb
+*.pkl
+*.pickle
+*.log
+
+# Byte-compiled / optimized / DLL files
+*.so
+*.dylib
+*.dll
+
+# -----------------------------------------
+# VIRTUAL ENVIRONMENTS
+# -----------------------------------------
+.venv/
+venv/
+ENV/
+env/
+
+# -----------------------------------------
+# IDE / EDITORS
+# -----------------------------------------
+
+# PyCharm
+.idea/
+*.iml
+
+# VS Code
+.vscode/
+
+# -----------------------------------------
+# YOLO / MACHINE LEARNING MODELS
+# -----------------------------------------
+*.pt
+*.onnx
+*.engine
+*.trt
+*.h5
+*.weights
+
+# Ultralytics cache
+ultralytics/
+runs/
+runs/
+runs/detect/
+runs/track/
+
+# -----------------------------------------
+# DEEPSORT FILES
+# -----------------------------------------
+*.npy
+deep_sort_realtime/embeddings/
+deep_sort_realtime/*.pth
+deep_sort_realtime/weights/
+
+# -----------------------------------------
+# OUTPUTS
+# -----------------------------------------
+output/
+outputs/
+video_output/
+*.mp4
+*.avi
+*.mkv
+
+# Skip sample video folders
+videos/*.mp4
+videos/*.avi
+videos/*.mkv
+
+# But keep the folder:
+!videos/
+!output/
+
+# -----------------------------------------
+# SYSTEM FILES
+# -----------------------------------------
+.DS_Store
+Thumbs.db
+
+# Windows
+*.lnk
+desktop.ini
+
+# -----------------------------------------
+# LOGS / TEMP
+# -----------------------------------------
+*.tmp
+*.temp
+*.cache
+cache/
+logs/
