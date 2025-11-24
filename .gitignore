@@ -65,14 +65,14 @@ deep_sort_realtime/weights/
 output/
 outputs/
 video_output/
-*.mp4
-*.avi
-*.mkv
+#*.mp4
+#*.avi
+#*.mkv
 
 # Skip sample video folders
-videos/*.mp4
-videos/*.avi
-videos/*.mkv
+#videos/*.mp4
+#videos/*.avi
+#videos/*.mkv
 
 # But keep the folder:
 !videos/

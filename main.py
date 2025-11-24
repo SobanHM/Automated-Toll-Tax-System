@@ -38,16 +38,13 @@ fps = cap.get(cv2.CAP_PROP_FPS)
 print(f"📏 Resolution: {frame_width}x{frame_height} | FPS: {fps:.2f}")
 print(f"🔹 Counting line: y={LINE_Y}")
 
-# -----------------------
-# INIT VIDEO WRITER (NEW)
-# -----------------------
+# inittialize video writter
 fourcc = cv2.VideoWriter_fourcc(*"mp4v")
 out = cv2.VideoWriter(OUTPUT_PATH, fourcc, fps, (frame_width, frame_height))
 print(f"💾 Output video will be saved to: {OUTPUT_PATH}")
 
-# -----------------------
-# STATE VARIABLES
-# -----------------------
+# state variables
+
 class_counts = {}
 vehicle_ids = set()
 

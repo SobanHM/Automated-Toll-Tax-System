@@ -1,0 +1,13 @@
+train: ../train/images
+val: ../valid/images
+test: ../test/images
+
+nc: 5
+names: ['Car', 'Motorcycle', 'Person', 'Truck', 'Van']
+
+roboflow:
+  workspace: craiblabsoban
+  project: truck-6fnh8-nlisw
+  version: 1
+  license: CC BY 4.0
+  url: https://universe.roboflow.com/craiblabsoban/truck-6fnh8-nlisw/dataset/1

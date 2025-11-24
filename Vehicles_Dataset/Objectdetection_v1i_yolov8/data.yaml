@@ -1,0 +1,13 @@
+train: ../train/images
+val: ../valid/images
+test: ../test/images
+
+nc: 6
+names: ['bike', 'bus', 'car', 'person', 'traffic signal', 'truck']
+
+roboflow:
+  workspace: craiblabsoban
+  project: object-detection-axukj-ajbr1
+  version: 1
+  license: CC BY 4.0
+  url: https://universe.roboflow.com/craiblabsoban/object-detection-axukj-ajbr1/dataset/1
