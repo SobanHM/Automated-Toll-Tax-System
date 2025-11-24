@@ -1,0 +1,7 @@
+train: Merged_Dataset\train\images
+val: Merged_Dataset\valid\images
+test: Merged_Dataset\test\images
+
+nc: 3
+names: ['car', 'truck', 'van']
+
