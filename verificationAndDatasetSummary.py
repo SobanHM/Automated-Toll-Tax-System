@@ -3,7 +3,7 @@
 import os
 
 DATASET_DIR = r"Merged_Dataset"
-CLASS_NAMES = ["car", "truck", "van"]
+CLASS_NAMES = ["car", "truck", "van", "bus"]
 
 
 def summarize_split(split):

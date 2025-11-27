@@ -6,8 +6,8 @@ from config import TOLL_RATES
 # -----------------------
 # CONFIG
 # -----------------------
-VIDEO_PATH = "videos/traffic_clip.mp4"  # your video path
-OUTPUT_PATH = "videos/processed_output.mp4"   # <--- NEW
+VIDEO_PATH = "videos/traffic_clip.mp4"
+OUTPUT_PATH = "videos/processed_output.mp4"
 LINE_Y = 500
 CONF_THRESHOLD = 0.3
 
