@@ -14,9 +14,12 @@ import numpy as np
 from ultralytics import YOLO
 import time
 from collections import defaultdict
+from config import TOLL_RATES as toll_rates_vehicles
+
 
 # toll rates in pkr
-TOLL = {"car": 50, "truck": 150, "van": 100, "bus": 200}
+# TOLL = {"car": 50, "truck": 150, "van": 100, "bus": 200}
+TOLL = toll_rates_vehicles
 
 # class name order as in model
 CLASS_NAMES = ["car", "truck", "van", "bus"]
@@ -26,7 +29,7 @@ def parse_args():
     p = argparse.ArgumentParser()
     p.add_argument("--weights", required=True, help="Path to best.pt")
     p.add_argument("--source", required=True, help="Path to video file (or camera index)")
-    p.add_argument("--out", default="out_toll.mp4", help="Output annotated video path")
+    p.add_argument("--out", default="output_toll_tax_video.mp4", help="Output annotated video path")
     p.add_argument("--line_y", type=int, default=450, help="Y coordinate of toll line (pixel)")
     p.add_argument("--direction", choices=["down", "up"], default="down",
                    help="Direction of crossing to count. 'down' means crossing from smaller y to larger y.")
