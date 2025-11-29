@@ -1,7 +1,6 @@
 
 # verification : count images and labels per class
 import os
-
 DATASET_DIR = r"Merged_Dataset"
 CLASS_NAMES = ["car", "truck", "van", "bus"]
 
@@ -47,41 +46,12 @@ def summarize_split(split):
 
 
 def main():
-    print("\n===== DATASET SUMMARY =====")
+    print("\n===== Dataset Summary (after adding new Bus dataset ) =========")
     for split in ["train", "valid", "test"]:
         summarize_split(split)
 
-    print("\nDone.\n")
+    print("\ndone.\n")
 
 
 if __name__ == "__main__":
     main()
-
-#
-# import os
-# from collections import defaultdict
-#
-# output_dir = "Merged_Dataset"
-# classes = ['car', 'motorcycle', 'truck', 'van', 'bus']
-#
-# splits = ["train", "valid", "test"]
-#
-# for split in splits:
-#     label_dir = os.path.join(output_dir, split, "labels")
-#     class_count = defaultdict(int)
-#     total_labels = 0
-#
-#     for label_file in os.listdir(label_dir):
-#         if not label_file.endswith(".txt"):
-#             continue
-#         with open(os.path.join(label_dir, label_file), "r") as f:
-#             lines = f.readlines()
-#         total_labels += len(lines)
-#         for line in lines:
-#             class_id = int(line.strip().split()[0])
-#             class_count[class_id] += 1
-#
-#     print(f"\nSplit: {split}")
-#     print(f"Total label boxes: {total_labels}")
-#     for cid, count in sorted(class_count.items()):
-#         print(f"{classes[cid]} ({cid}): {count}")
