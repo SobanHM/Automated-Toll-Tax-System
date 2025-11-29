@@ -159,7 +159,7 @@ def main():
             # draw toll line and overlay counts/toll
             cv2.line(frame, (0, toll_line_y), (width, toll_line_y), (0, 0, 255), 2)
             info_y = 30
-            cv2.putText(frame, f"Developed by Soban\nTotal Toll: Rs {total_toll}", (10, info_y), cv2.FONT_HERSHEY_SIMPLEX, 0.9, (0, 0, 255),
+            cv2.putText(frame, f"Total Toll: Rs {total_toll}", (10, info_y), cv2.FONT_HERSHEY_SIMPLEX, 0.9, (0, 0, 255),
                         2)
             info_y += 30
             for cls in CLASS_NAMES:
@@ -189,10 +189,10 @@ def main():
             break
         frame_idx += 1
         # predict with tracking ON (ultralytics supports tracker arg in predict/track)
-        results = model.track(frame, tracker=args.tracker)  # sometimes model.track(source=frame, ...) not supported
+        results = model.track(frame, tracker=args.tracker)
         # If predict/track returns results object list:
         for r in results:
-            # r.boxes etc similar to above; implement same logic as stream branch
+            # r.boxes similar to above adn implement same logic as stream branch
             pass
 
     out_writer.release()
