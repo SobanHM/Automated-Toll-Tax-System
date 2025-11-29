@@ -9,7 +9,7 @@ label_folders = [
 ]
 
 OLD_CLASS = "0"   # bus dataset uses class 0
-NEW_CLASS = "3"   # final unified BUS class
+NEW_CLASS = "3"   # final unified bus class
 
 for folder in label_folders:
     if not os.path.exists(folder):
@@ -35,4 +35,4 @@ for folder in label_folders:
             with open(file_path, "w") as f:
                 f.writelines(new_lines)
 
-print("All BUS labels successfully remapped from class 0 → 3")
+print("all bus labels successfully remapped from class 0 → 3")
