@@ -6,14 +6,13 @@ import numpy as np
 from tqdm import tqdm
 import albumentations as A
 
-# ================= CONFIG =================
-DATASET_PATH = "Merged_Dataset"  # change if your dataset folder is elsewhere
+DATASET_PATH = "Merged_Dataset"
 OUTPUT_MULTIPLIER = 1.5  # multiply boxes to balance classes
 TARGET_SPLIT = "train"
 
-# ================= HELPER FUNCTIONS =================
+
 def read_yolo_labels(label_path):
-    """Read YOLO-format labels safely"""
+    # reading YOLO-format labels safely
     boxes = []
     class_ids = []
     if not os.path.exists(label_path):
@@ -40,7 +39,7 @@ def write_yolo_label(label_path, boxes, class_ids):
         for cls, box in zip(class_ids, boxes):
             f.write(f"{cls} {' '.join(map(str, box))}\n")
 
-# ================= DATASET BALANCER CLASS =================
+# ======= dataset balancer class =================
 class DatasetBalancer:
     def __init__(self, dataset_path):
         self.dataset_path = dataset_path
@@ -52,7 +51,7 @@ class DatasetBalancer:
         self.num_classes = len(self.class_names)
         print("Loaded classes:", self.class_names)
 
-        # Define Albumentations transform for augmentation
+        # define albumentations transform for augmentation
         self.transform = A.Compose([
             A.HorizontalFlip(p=0.5),
             A.ShiftScaleRotate(shift_limit=0.1, scale_limit=0.2, rotate_limit=15, p=0.5),
@@ -149,184 +148,15 @@ class DatasetBalancer:
                 aug_lbl_name = lbl_file.replace(".txt", f"_aug{i}.txt")
                 cv2.imwrite(os.path.join(images_path, aug_img_name), aug_img)
                 write_yolo_label(os.path.join(labels_path, aug_lbl_name), aug_boxes, aug_ids)
-        print("\nBalancing finished.")
+        print("\nBalancing finished")
 
 # ================= MAIN =================
 if __name__ == "__main__":
     db = DatasetBalancer(DATASET_PATH)
-    print("\nBEFORE BALANCING:")
+    print("\nBefore balancing:")
     db.print_report()
 
     db.balance_dataset(target_split=TARGET_SPLIT, output_multiplier=OUTPUT_MULTIPLIER)
 
-    print("\nAFTER BALANCING:")
+    print("\nAfter balancing:")
     db.print_report()
-
-
-
-
-# # dataset_balancer.py (fixed & upgraded - Option B)
-# import os
-# import cv2
-# import random
-# import shutil
-# from tqdm import tqdm
-# import albumentations as A
-# from collections import defaultdict
-# import yaml
-#
-#
-# class DatasetBalancer:
-#     def __init__(self, dataset_path, classes):
-#         self.dataset_path = dataset_path
-#         self.classes = classes
-#         self.train_dir = os.path.join(dataset_path, "train")
-#         self.valid_dir = os.path.join(dataset_path, "valid")
-#         self.test_dir = os.path.join(dataset_path, "test")
-#         self.transform = A.Compose([
-#             A.HorizontalFlip(p=0.5),
-#             A.RandomBrightnessContrast(p=0.5),
-#             A.ShiftScaleRotate(shift_limit=0.05, scale_limit=0.2, rotate_limit=10, p=0.6),
-#             A.GaussNoise(p=0.3),
-#             A.MotionBlur(p=0.3)
-#         ],
-#             bbox_params=A.BboxParams(
-#                 format='yolo',
-#                 label_fields=['class_labels'],
-#                 min_visibility=0.0,
-#                 check_each_transform=True
-#             ))
-#
-#     def print_report(self, plot=False):
-#         print("\n==== DATASET REPORT ====\n")
-#         for split_name, split_dir in [("train", self.train_dir),
-#                                       ("valid", self.valid_dir),
-#                                       ("test", self.test_dir)]:
-#             img_files = os.listdir(os.path.join(split_dir, "images"))
-#             lbl_files = os.listdir(os.path.join(split_dir, "labels"))
-#             class_counts = defaultdict(int)
-#             total_boxes = 0
-#             for lbl_file in lbl_files:
-#                 with open(os.path.join(split_dir, "labels", lbl_file), "r") as f:
-#                     lines = f.readlines()
-#                 total_boxes += len(lines)
-#                 for line in lines:
-#                     cid = int(line.strip().split()[0])
-#                     class_counts[cid] += 1
-#             print(f"Split: {split_name}")
-#             print(f" Images: {len(img_files)}")
-#             print(f" Boxes: {total_boxes}")
-#             for cid, count in sorted(class_counts.items()):
-#                 print(f"  {self.classes[cid]} ({cid}): {count}")
-#             print("")
-#
-#     def balance_dataset(self, target_split="train", output_multiplier=1.5):
-#         split_dir = getattr(self, f"{target_split}_dir")
-#         img_dir = os.path.join(split_dir, "images")
-#         lbl_dir = os.path.join(split_dir, "labels")
-#
-#         # Count existing boxes per class
-#         class_counts = defaultdict(int)
-#         lbl_files = os.listdir(lbl_dir)
-#         for lbl_file in lbl_files:
-#             with open(os.path.join(lbl_dir, lbl_file), "r") as f:
-#                 for line in f:
-#                     cid = int(line.strip().split()[0])
-#                     class_counts[cid] += 1
-#
-#         max_count = max(class_counts.values())
-#         target_count = int(max_count * output_multiplier)
-#         print(f"Target per class = {target_count} boxes")
-#
-#         # Augment each class if needed
-#         for cid, count in class_counts.items():
-#             needed = target_count - count
-#             if needed <= 0:
-#                 continue
-#             print(f"Augmenting class {self.classes[cid]}: Need {needed} new samples")
-#
-#             # Collect files containing this class
-#             candidate_files = []
-#             for lbl_file in lbl_files:
-#                 with open(os.path.join(lbl_dir, lbl_file), "r") as f:
-#                     lines = f.readlines()
-#                 for line in lines:
-#                     line_cid = int(line.strip().split()[0])
-#                     if line_cid == cid:
-#                         candidate_files.append(lbl_file)
-#                         break
-#             if not candidate_files:
-#                 continue
-#
-#             for i in tqdm(range(needed), desc=f"Augmenting {self.classes[cid]}"):
-#                 lbl_file = random.choice(candidate_files)
-#                 img_file = lbl_file.replace(".txt", ".jpg")
-#                 img_path = os.path.join(img_dir, img_file)
-#                 lbl_path = os.path.join(lbl_dir, lbl_file)
-#
-#                 # Read image
-#                 img = cv2.imread(img_path)
-#                 if img is None:
-#                     continue
-#
-#                 # Read labels
-#                 boxes = []
-#                 class_ids = []
-#                 with open(lbl_path, "r") as f:
-#                     for line in f:
-#                         parts = line.strip().split()
-#                         line_cid = int(parts[0])
-#                         if line_cid != cid:
-#                             continue
-#                         class_ids.append(line_cid)
-#                         boxes.append([float(x) for x in parts[1:]])
-#
-#                 if not boxes:
-#                     continue
-#
-#                 # Apply augmentation
-#                 augmented = self.transform(image=img, bboxes=boxes, class_labels=class_ids)
-#                 aug_img = augmented["image"]
-#                 aug_boxes = augmented["bboxes"]
-#                 aug_labels = augmented["class_labels"]
-#
-#                 # Clip YOLO boxes to [0,1]
-#                 aug_boxes_clipped = []
-#                 aug_labels_clipped = []
-#                 for b, lbl in zip(aug_boxes, aug_labels):
-#                     x, y, w, h = b
-#                     x = min(max(x, 0.0), 1.0)
-#                     y = min(max(y, 0.0), 1.0)
-#                     w = min(max(w, 0.0), 1.0)
-#                     h = min(max(h, 0.0), 1.0)
-#                     if w == 0 or h == 0:
-#                         continue
-#                     aug_boxes_clipped.append([x, y, w, h])
-#                     aug_labels_clipped.append(lbl)
-#
-#                 # Save augmented image and label
-#                 new_img_name = f"aug_{i}_{img_file}"
-#                 new_lbl_name = new_img_name.replace(".jpg", ".txt")
-#                 cv2.imwrite(os.path.join(img_dir, new_img_name), aug_img)
-#                 with open(os.path.join(lbl_dir, new_lbl_name), "w") as f:
-#                     for lbl_val, b in zip(aug_labels_clipped, aug_boxes_clipped):
-#                         f.write(f"{lbl_val} {b[0]:.6f} {b[1]:.6f} {b[2]:.6f} {b[3]:.6f}\n")
-#
-#         print("Balancing finished.")
-#
-#
-# # ===========================
-# # Usage example
-# # ===========================
-# if __name__ == "__main__":
-#     DATASET_PATH = r"C:/Users/soban/PycharmProjects/Smart-Toll-Tax-System/Merged_Dataset"
-#     CLASS_NAMES = ["car", "truck", "van", "bus"]
-#
-#     db = DatasetBalancer(DATASET_PATH, CLASS_NAMES)
-#     print("\nBEFORE BALANCING:")
-#     db.print_report()
-#
-#     db.balance_dataset(target_split="train", output_multiplier=1.5)
-#
-#     print("\nAFTER BALANCING:")
-#     db.print_report()
